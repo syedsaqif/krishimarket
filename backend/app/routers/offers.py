@@ -292,6 +292,14 @@ def accept_offer(
             detail=f"Cannot accept an offer that is already {offer.status.value}",
         )
 
+    lot = db.query(Lot).filter(Lot.id == offer.lot_id).first()
+    if not lot or lot.status != LotStatus.available:
+        status_val = lot.status.value if lot else "unavailable"
+        raise HTTPException(
+            status_code=400,
+            detail=f"Lot is no longer available (currently {status_val})",
+        )
+
     offer.status = OfferStatus.accepted
 
     transaction = Transaction(
@@ -300,8 +308,17 @@ def accept_offer(
     )
     db.add(transaction)
 
-    lot = db.query(Lot).filter(Lot.id == offer.lot_id).first()
     lot.status = LotStatus.reserved
+
+    # Auto-reject any other competing pending offers on this lot
+    other_pending = (
+        db.query(Offer)
+        .filter(Offer.lot_id == lot.id, Offer.id != offer.id, Offer.status == OfferStatus.pending)
+        .all()
+    )
+    for other in other_pending:
+        other.status = OfferStatus.rejected
+        notify_offer_rejected(db, other.buyer_id, lot.commodity, other.id)
 
     db.commit()
     db.refresh(offer)

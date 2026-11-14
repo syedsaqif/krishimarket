@@ -81,8 +81,11 @@ def save_file(
             f"Accepted types: {', '.join(sorted(ALLOWED_MIME_TYPES))}"
         )
 
-    # Generate a unique filename
-    ext = _extension_for_mime(guessed_type)
+    # Determine if file is an image that should be converted to WebP
+    is_image = guessed_type.startswith("image/") and guessed_type != "application/pdf"
+
+    # Generate a unique filename with matching extension
+    ext = ".webp" if is_image else _extension_for_mime(guessed_type)
     unique_name = f"{uuid.uuid4().hex}{ext}"
 
     # Ensure target directory exists
@@ -91,13 +94,13 @@ def save_file(
     target_path = target_dir / unique_name
 
     # Compress images before saving
-    if guessed_type.startswith("image/") and guessed_type != "application/pdf":
+    if is_image:
         _compress_and_save_image(raw, target_path)
     else:
         target_path.write_bytes(raw)
 
     relative_path = f"{category}/{unique_name}"
-    return relative_path
+    return get_file_url(relative_path)
 
 
 def get_file_url(relative_path: str) -> str:
@@ -107,16 +110,23 @@ def get_file_url(relative_path: str) -> str:
     For local storage, this returns a path that the backend can serve.
     For S3/Supabase, this would return a pre-signed URL.
     """
+    clean_path = relative_path.lstrip("/")
+    if clean_path.startswith("uploads/"):
+        clean_path = clean_path[len("uploads/"):]
+
     base_url = os.getenv("FILE_STORAGE_BUCKET_URL", "").strip()
     if base_url:
-        return f"{base_url.rstrip('/')}/{relative_path}"
+        return f"{base_url.rstrip('/')}/{clean_path}"
     # Local fallback — served via a static files route
-    return f"/uploads/{relative_path}"
+    return f"/uploads/{clean_path}"
 
 
 def file_exists(relative_path: str) -> bool:
     """Check if a file exists at the given relative path."""
-    return (UPLOAD_DIR / relative_path).exists()
+    clean_path = relative_path.lstrip("/")
+    if clean_path.startswith("uploads/"):
+        clean_path = clean_path[len("uploads/"):]
+    return (UPLOAD_DIR / clean_path).exists()
 
 
 # ── Internals ────────────────────────────────────────────────────────
@@ -162,9 +172,4 @@ def _compress_and_save_image(raw: bytes, target_path: Path) -> None:
         img.thumbnail((IMAGE_MAX_DIMENSION, IMAGE_MAX_DIMENSION), Image.LANCZOS)
 
     # Save as WebP for better compression
-    webp_path = target_path.with_suffix(".webp")
-    img.save(webp_path, format="WEBP", quality=80, optimize=True)
-
-    # Update the target path in case caller used a different extension
-    if target_path != webp_path and target_path.exists():
-        target_path.unlink()
+    img.save(target_path, format="WEBP", quality=80, optimize=True)

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Star } from "lucide-react";
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 
 export function StarRating({
   value = 0,

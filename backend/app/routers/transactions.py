@@ -223,6 +223,18 @@ def _get_transaction_for_delivery(
     return transaction, offer, lot
 
 
+class HubCheckinRequest(BaseModel):
+    photo_url: Optional[str] = None
+    weight_kg: Optional[float] = None
+    grade: Optional[str] = None
+
+
+class VerifyRequest(BaseModel):
+    weight_kg: Optional[float] = None
+    grade: Optional[str] = None
+    photo_url: Optional[str] = None
+
+
 class DispatchRequest(BaseModel):
     delivery_method: str = Field(..., min_length=1, max_length=200)
 
@@ -234,6 +246,60 @@ class RejectRequest(BaseModel):
     @classmethod
     def sanitize_reason(cls, v: str) -> str:
         return sanitize_text(v, max_length=1000)
+
+
+@router.post("/{transaction_id}/hub-checkin", response_model=TransactionResponse)
+def hub_checkin_transaction(
+    transaction_id: int,
+    payload: Optional[HubCheckinRequest] = None,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+    _rl=Depends(create_rate_limiter(max_calls=10, window_seconds=60)),
+):
+    """Advance delivery status to 'hub_checkin_pending'."""
+    transaction, offer, lot = _get_transaction_for_delivery(
+        transaction_id, db, current_user,
+    )
+    p_dict = payload.model_dump() if payload else {}
+    try:
+        delivery_transition(
+            db, transaction, DeliveryEvent.HUB_CHECKIN,
+            photo_url=p_dict.get("photo_url"),
+            weight_kg=p_dict.get("weight_kg"),
+            grade=p_dict.get("grade"),
+        )
+    except DeliveryTransitionError as exc:
+        raise HTTPException(status_code=400, detail=exc.message)
+    db.commit()
+    db.refresh(transaction)
+    return _enrich_transaction(transaction, db)
+
+
+@router.post("/{transaction_id}/verify", response_model=TransactionResponse)
+def verify_transaction(
+    transaction_id: int,
+    payload: Optional[VerifyRequest] = None,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+    _rl=Depends(create_rate_limiter(max_calls=10, window_seconds=60)),
+):
+    """Advance delivery status to 'verified_at_hub'."""
+    transaction, offer, lot = _get_transaction_for_delivery(
+        transaction_id, db, current_user,
+    )
+    p_dict = payload.model_dump() if payload else {}
+    try:
+        delivery_transition(
+            db, transaction, DeliveryEvent.VERIFY,
+            photo_url=p_dict.get("photo_url"),
+            weight_kg=p_dict.get("weight_kg"),
+            grade=p_dict.get("grade"),
+        )
+    except DeliveryTransitionError as exc:
+        raise HTTPException(status_code=400, detail=exc.message)
+    db.commit()
+    db.refresh(transaction)
+    return _enrich_transaction(transaction, db)
 
 
 @router.post("/{transaction_id}/dispatch", response_model=TransactionResponse)

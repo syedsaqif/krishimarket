@@ -10,7 +10,7 @@ from typing import Optional
 
 from app.database import get_db
 from app.models import (
-    Rating, Transaction, Offer, Lot, User, PaymentStatus,
+    Rating, Transaction, Offer, Lot, User, PaymentStatus, DeliveryStatus,
 )
 from app.auth import get_current_user
 from app.sanitize import sanitize_text
@@ -75,10 +75,14 @@ def create_rating(
     if not transaction:
         raise HTTPException(status_code=404, detail="Transaction not found")
 
-    if transaction.payment_status != PaymentStatus.paid:
+    is_completed = (
+        transaction.payment_status == PaymentStatus.paid
+        or transaction.delivery_status == DeliveryStatus.delivered
+    )
+    if not is_completed:
         raise HTTPException(
             status_code=400,
-            detail="Ratings can only be submitted after payment is confirmed",
+            detail="Ratings can only be submitted after delivery is complete or payment is confirmed",
         )
 
     # Determine the two parties

@@ -201,6 +201,7 @@
       "verifiedFarmers": "सत्यापित शेतकरी",
       "fairPrices": "न्याय्य भाव",
       "getStarted": "मोफत सुरू करा",
+      "alreadyMember": "सदस्य आहात?",
       "title": "लॉट पहा",
       "subtitle": "देशभरातील सत्यापित शेतकऱ्यांनी सूचीबद्ध केलेले ताजे पीक शोधा.",
       "commodity": "पीक",
@@ -408,7 +409,11 @@
     "raiseDisputeDesc": "समस्या सांगा. यामुळे ऑर्डर वादग्रस्त स्थितीत जाईल.",
     "counterpartyDisputeOpen": "दुसऱ्या पक्षाने वाद नोंदवला",
     "reasonLabel": "कारण",
-    "rejectReasonPlaceholder": "समस्या सांगा (किमान १० अक्षरे)..."
+    "rejectReasonPlaceholder": "समस्या सांगा (किमान १० अक्षरे)...",
+    "hubCheckin": "हबवर चेक-इन करा",
+    "hubCheckinSuccess": "उत्पादन हबवर चेक-इन झाले.",
+    "verifyAtHub": "हब इनटेक सत्यापित करा",
+    "verifiedAtHubSuccess": "उत्पादन हबवर सत्यापित झाले."
   },
   "notif": {
     "title": "सूचना",

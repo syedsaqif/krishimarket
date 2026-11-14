@@ -201,6 +201,7 @@
       "verifiedFarmers": "सत्यापित किसान",
       "fairPrices": "उचित भाव",
       "getStarted": "मुफ़्त शुरू करें",
+      "alreadyMember": "सदस्य हैं?",
       "title": "लॉट देखें",
       "subtitle": "देश भर के सत्यापित किसानों द्वारा सूचीबद्ध ताज़ी उपज खोजें।",
       "commodity": "उपज",
@@ -408,7 +409,11 @@
     "raiseDisputeDesc": "समस्या का वर्णन करें। इससे ऑर्डर विवादित स्थिति में जाएगा।",
     "counterpartyDisputeOpen": "दूसरी पार्टी ने विवाद दर्ज किया",
     "reasonLabel": "कारण",
-    "rejectReasonPlaceholder": "समस्या बताएँ (न्यूनतम 10 अक्षर)..."
+    "rejectReasonPlaceholder": "समस्या बताएँ (न्यूनतम 10 अक्षर)...",
+    "hubCheckin": "हब पर चेक-इन करें",
+    "hubCheckinSuccess": "उपज हब पर चेक-इन हो गई।",
+    "verifyAtHub": "हब इनटेक सत्यापित करें",
+    "verifiedAtHubSuccess": "उपज हब पर सत्यापित हो गई।"
   },
   "notif": {
     "title": "सूचनाएँ",

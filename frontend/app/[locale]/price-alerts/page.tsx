@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, FormEvent } from "react";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { apiFetch } from "@/lib/api";
 import { INDIAN_STATES, DISTRICTS_BY_STATE } from "@/lib/market-types";
@@ -130,7 +131,7 @@ function PriceAlertsInner() {
       ) : !isAuthenticated ? (
         <Card>
           <CardContent className="py-10 text-center text-sm text-muted-foreground">
-            {browseT("getStarted")} — <a href="/login" className="underline">{browseT("alreadyMember")}</a>
+            {browseT("getStarted")} — <Link href="/login" className="underline">{browseT("alreadyMember")}</Link>
           </CardContent>
         </Card>
       ) : (

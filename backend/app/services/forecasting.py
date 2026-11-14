@@ -92,7 +92,10 @@ def forecast_price(
     smoothed_current = (current_price + moving_avg) / 2
     predicted_7d = (predicted_7d + moving_avg) / 2
 
-    pct_change_7d = ((predicted_7d - smoothed_current) / smoothed_current) * 100
+    if smoothed_current <= 0:
+        pct_change_7d = 0.0
+    else:
+        pct_change_7d = ((predicted_7d - smoothed_current) / smoothed_current) * 100
 
     if pct_change_7d > HOLD_THRESHOLD_PCT:
         recommendation = "hold"

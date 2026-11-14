@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Languages, Loader2 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 
 export function TranslateButton({
   text,

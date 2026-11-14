@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2, BellOff, CheckCheck } from "lucide-react";
 import { toast } from "sonner";
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 import { AuthenticatedRouteGuard } from "@/components/authenticated-route-guard";
 
 interface AppNotification {

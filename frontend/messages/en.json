@@ -201,6 +201,7 @@
       "verifiedFarmers": "Verified farmers",
       "fairPrices": "Fair prices",
       "getStarted": "Get started free",
+      "alreadyMember": "Already a member?",
       "title": "Browse Lots",
       "subtitle": "Discover fresh produce listed by verified farmers across the country.",
       "commodity": "Commodity",
@@ -408,7 +409,11 @@
     "raiseDisputeDesc": "Describe the issue. This will transition the order to Disputed status.",
     "counterpartyDisputeOpen": "Counterparty disputed",
     "reasonLabel": "Reason",
-    "rejectReasonPlaceholder": "Describe the issue (min 10 characters)..."
+    "rejectReasonPlaceholder": "Describe the issue (min 10 characters)...",
+    "hubCheckin": "Check-in at Hub",
+    "hubCheckinSuccess": "Produce checked in at Hub.",
+    "verifyAtHub": "Verify Intake at Hub",
+    "verifiedAtHubSuccess": "Produce verified at Hub."
   },
   "notif": {
     "title": "Notifications",

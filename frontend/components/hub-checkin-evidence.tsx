@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { resolveApiUrl } from "@/lib/api";
 import { type Transaction } from "@/lib/market-types";
 import {
   ShieldCheck,
@@ -37,6 +38,7 @@ export function HubCheckinEvidence({
   const checkinGrade = transaction.hub_checkin_grade;
   const listedGrade = transaction.lot_grade;
   const photoUrl = transaction.hub_checkin_photo_url;
+  const resolvedPhotoUrl = photoUrl ? resolveApiUrl(photoUrl) : null;
 
   // Has check-in happened?
   const hasCheckinData =
@@ -187,9 +189,10 @@ export function HubCheckinEvidence({
                   className="group relative h-28 w-full cursor-pointer overflow-hidden rounded-md border border-border bg-muted"
                 >
                   <Image
-                    src={photoUrl}
+                    src={resolvedPhotoUrl || photoUrl}
                     alt="Hub check-in physical lot evidence"
                     fill
+                    unoptimized
                     sizes="(max-width: 640px) 100vw, 33vw"
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
@@ -364,9 +367,10 @@ export function HubCheckinEvidence({
             </button>
             <div className="relative h-[65vh] w-[80vw] max-w-xl">
               <Image
-                src={photoUrl}
+                src={resolvedPhotoUrl || photoUrl}
                 alt="Hub inspection photo full"
                 fill
+                unoptimized
                 className="rounded-lg object-contain"
               />
             </div>

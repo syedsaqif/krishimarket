@@ -174,6 +174,28 @@ def transition(
 
     # ── Event-specific validations / side-effects ────────────────────────
 
+    if event == DeliveryEvent.HUB_CHECKIN:
+        photo_url = kwargs.get("photo_url")
+        weight_kg = kwargs.get("weight_kg")
+        grade = kwargs.get("grade")
+        if photo_url is not None and str(photo_url).strip():
+            transaction.hub_checkin_photo_url = str(photo_url).strip()
+        if weight_kg is not None:
+            transaction.hub_checkin_weight_kg = float(weight_kg)
+        if grade is not None and str(grade).strip():
+            transaction.hub_checkin_grade = str(grade).strip()
+
+    if event == DeliveryEvent.VERIFY:
+        photo_url = kwargs.get("photo_url")
+        weight_kg = kwargs.get("weight_kg")
+        grade = kwargs.get("grade")
+        if photo_url is not None and str(photo_url).strip():
+            transaction.hub_checkin_photo_url = str(photo_url).strip()
+        if weight_kg is not None:
+            transaction.hub_checkin_weight_kg = float(weight_kg)
+        if grade is not None and str(grade).strip():
+            transaction.hub_checkin_grade = str(grade).strip()
+
     if event == DeliveryEvent.DISPATCH:
         delivery_method = kwargs.get("delivery_method")
         if not delivery_method or not str(delivery_method).strip():

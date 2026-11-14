@@ -51,6 +51,7 @@ import {
   ShoppingBasket,
   Truck,
   AlertTriangle,
+  PackageCheck,
 } from "lucide-react";
 import { VerifiedBadge } from "@/components/verified-badge";
 
@@ -591,6 +592,30 @@ function TransactionsInner() {
                       ) : null}
 
                       {/* ── Delivery action buttons ───────────── */}
+                      {item.delivery_status === "listed" && (
+                        <Button
+                          size="sm"
+                          className="bg-emerald-600 hover:bg-emerald-700 font-semibold text-white"
+                          onClick={() => handleDeliveryTransition(item.id, "hub-checkin", t("hubCheckinSuccess"))}
+                          disabled={actingId === item.id}
+                        >
+                          {actingId === item.id ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <PackageCheck className="mr-1.5 h-3.5 w-3.5" />}
+                          {t("hubCheckin")}
+                        </Button>
+                      )}
+
+                      {item.delivery_status === "hub_checkin_pending" && (
+                        <Button
+                          size="sm"
+                          className="bg-blue-600 hover:bg-blue-700 font-semibold text-white"
+                          onClick={() => handleDeliveryTransition(item.id, "verify", t("verifiedAtHubSuccess"))}
+                          disabled={actingId === item.id}
+                        >
+                          {actingId === item.id ? <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="mr-1.5 h-3.5 w-3.5" />}
+                          {t("verifyAtHub")}
+                        </Button>
+                      )}
+
                       {item.delivery_status === "verified_at_hub" && (
                         <Dialog
                           open={dispatchFor === item.id}

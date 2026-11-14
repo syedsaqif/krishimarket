@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Volume2, Loader2 } from "lucide-react";
 import { apiFetch, resolveApiUrl } from "@/lib/api";
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 
 export function ReadAloud({
   text,
